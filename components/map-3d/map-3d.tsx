@@ -14,6 +14,7 @@ import "./map-3d-types";
 
 export type Map3DProps = google.maps.maps3d.Map3DElementOptions & {
   onCameraChange?: (cameraProps: Map3DCameraProps) => void;
+  onLoad?: () => void;
 };
 
 export type Map3DCameraProps = {
@@ -45,6 +46,9 @@ export const Map3D = forwardRef(
       customElements.whenDefined("gmp-map-3d").then(() => {
         setCustomElementsReady(true);
       });
+      if (props.onLoad) {
+        props.onLoad();
+      }
     }, []);
 
     const { center, heading, tilt, range, roll, ...map3dOptions } = props;
