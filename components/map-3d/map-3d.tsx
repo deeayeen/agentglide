@@ -83,6 +83,7 @@ export const Map3D = forwardRef(
         heading={String(props.heading)}
         tilt={String(props.tilt)}
         roll={String(props.roll)}
+        default-ui-disabled
       ></gmp-map-3d>
     );
   }
