@@ -54,11 +54,11 @@ export default function Menu() {
               <div className="font-bold mb-2">
                 where would you like to travel?
               </div>
-              <Input className="w-full" />
+              <Input className="w-full font-bold" />
               <div className="font-bold mt-8 mb-2">
                 what activities are you interested in?
               </div>
-              <Input className="w-full" />
+              <Input className="w-full font-bold" />
             </div>
           </div>
         </div>
