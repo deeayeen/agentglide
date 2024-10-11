@@ -80,6 +80,7 @@ export default function Map({
     if (mapLoaded && map3dRef.current && globalThis.google) {
       const map3dElement = map3dRef.current;
       let isCancelled = false;
+      //@ts-ignore
       let currentMarker: google.maps.maps3d.Marker3DElement | null = null;
 
       const runAnimation = async () => {
@@ -141,11 +142,34 @@ export default function Map({
               currentMarker = null;
             }
 
+            // Use Places API coordinates if available
+            let lat = destination.destinationCoordinatesLatitude;
+            let lng = destination.destinationCoordinatesLongitude;
+
+            if (
+              destination.geometry &&
+              destination.geometry.location &&
+              destination.geometry.location.lat &&
+              destination.geometry.location.lng
+            ) {
+              lat =
+                typeof destination.geometry.location.lat === "function"
+                  ? destination.geometry.location.lat()
+                  : destination.geometry.location.lat;
+              lng =
+                typeof destination.geometry.location.lng === "function"
+                  ? destination.geometry.location.lng()
+                  : destination.geometry.location.lng;
+            }
+
+            // Use elevation as altitude if available
+            const altitude = destination.elevation || 0;
+
             // Create new marker with label
             currentMarker = new Marker3DElement({
               position: {
-                lat: destination.destinationCoordinatesLatitude,
-                lng: destination.destinationCoordinatesLongitude,
+                lat,
+                lng,
               },
               label: destination.destinationName,
             });
@@ -155,9 +179,9 @@ export default function Map({
             await flyCameraToAsync({
               endCamera: {
                 center: {
-                  lat: destination.destinationCoordinatesLatitude,
-                  lng: destination.destinationCoordinatesLongitude,
-                  altitude: 0,
+                  lat,
+                  lng,
+                  altitude,
                 },
                 tilt: 55,
                 range: 1500,
@@ -171,9 +195,9 @@ export default function Map({
             await flyCameraAroundAsync({
               camera: {
                 center: {
-                  lat: destination.destinationCoordinatesLatitude,
-                  lng: destination.destinationCoordinatesLongitude,
-                  altitude: 0,
+                  lat,
+                  lng,
+                  altitude,
                 },
                 tilt: 55,
                 range: 1500,

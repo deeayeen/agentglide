@@ -3,6 +3,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import clsx from "clsx";
 import { CircleArrowRightIcon } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 const activities = [
   {
@@ -49,6 +50,8 @@ export default function Form({
   const [destination, setDestination] = useState("");
   const [selectedActivities, setSelectedActivities] = useState<any>([]);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const { toast } = useToast();
 
   const onActivityClick = (activity: any) => {
     if (selectedActivities.includes(activity)) {
@@ -106,7 +109,12 @@ export default function Form({
         <Button
           className="w-full mt-3 bg-white text-black hover:bg-gray-200 font-bold text-sm select-none transition-opacity duration-500 ease-in-out"
           onClick={() =>
-            onPlanTrip({ destination, activities: selectedActivities })
+            destination
+              ? onPlanTrip({ destination, activities: selectedActivities })
+              : toast({
+                  title: "please enter a destination",
+                  variant: "destructive",
+                })
           }
         >
           show me around

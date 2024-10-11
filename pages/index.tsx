@@ -40,17 +40,20 @@ export default function Home() {
         currentDestinationIndex={currentDestinationIndex}
       />
       <Header menuOpen={menuOpen} />
-      <Menu
-        menuOpen={menuOpen}
-        setMenuOpen={setMenuOpen}
-        onPlanTrip={onPlanTrip}
-      />
-      <Trip
-        trip={trip}
-        currentDestinationIndex={currentDestinationIndex}
-        setCurrentDestinationIndex={setCurrentDestinationIndex}
-        resetTrip={resetTrip}
-      />
+      {!trip ? (
+        <Menu
+          menuOpen={menuOpen}
+          setMenuOpen={setMenuOpen}
+          onPlanTrip={onPlanTrip}
+        />
+      ) : (
+        <Trip
+          trip={trip}
+          currentDestinationIndex={currentDestinationIndex}
+          setCurrentDestinationIndex={setCurrentDestinationIndex}
+          resetTrip={resetTrip}
+        />
+      )}
     </>
   );
 }
