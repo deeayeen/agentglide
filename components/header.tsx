@@ -16,7 +16,7 @@ export default function Header({ menuOpen }: { menuOpen: boolean }) {
           height={30}
           className="mr-2"
         />
-        <div className="text-xl font-black select-none drop-shadow-2xl">
+        <div className="text-xl font-black select-none drop-shadow-2xl text-shadow-lg">
           agentglide
         </div>
       </div>

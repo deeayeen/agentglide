@@ -43,7 +43,7 @@ export default function Menu({
         )}
       >
         {!menuOpen && (
-          <div className="text-xl sm:text-3xl font-black select-none text-center">
+          <div className="text-xl sm:text-3xl font-black select-none text-center text-shadow-lg">
             photo-realistic 3D AI travel agent
           </div>
         )}

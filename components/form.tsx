@@ -74,16 +74,16 @@ export default function Form({
   return (
     <div className="w-full h-full flex items-center justify-center">
       <div className="w-full">
-        <div className="font-bold mb-2 mt-10">
+        <div className="font-bold mb-2 mt-10 text-shadow-lg">
           where would you like to travel?
         </div>
         <Input
           ref={inputRef}
-          className="w-full font-bold"
+          className="w-full font-bold text-shadow-lg"
           value={destination}
           onChange={(e) => setDestination(e.target.value)}
         />
-        <div className="font-bold mt-4 mb-2">
+        <div className="font-bold mt-4 mb-2 text-shadow-lg">
           what activities are you interested in?
         </div>
         <div className="flex flex-wrap">
@@ -100,7 +100,7 @@ export default function Form({
               variant="outline"
               onClick={() => onActivityClick(activity)}
             >
-              <div className="font-bold text-sm">
+              <div className="font-bold text-sm text-shadow-lg">
                 {activity.emoji} {activity.name.toLowerCase()}
               </div>
             </Button>

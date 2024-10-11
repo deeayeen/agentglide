@@ -42,10 +42,10 @@ export default function Trip({
       <div className="bg-white bg-opacity-30 backdrop-blur-lg p-4 rounded-t-lg">
         <div className="flex">
           <div className="max-w-md">
-            <div className="text-3xl font-black">
+            <div className="text-3xl font-black text-shadow-lg">
               {destination.destinationName}
             </div>
-            <div className="mt-2 text-sm font-bold">
+            <div className="mt-2 text-sm font-bold text-shadow-lg">
               {destination.destinationDescription}
             </div>
           </div>
@@ -74,7 +74,7 @@ export default function Trip({
               onClick={handleNext}
               className="bg-white text-black hover:bg-gray-200 font-bold select-none"
             >
-              next
+              next destination
             </Button>
           ) : (
             <Button
