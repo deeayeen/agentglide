@@ -53,7 +53,7 @@ export default function Trip({
             <img
               src={photoUrl}
               alt={destination.destinationName}
-              className="ml-8 h-40"
+              className="ml-8 h-40 rounded-lg"
             />
           )}
         </div>
@@ -62,7 +62,7 @@ export default function Trip({
           {currentDestinationIndex !== 0 ? (
             <Button
               onClick={handlePrevious}
-              className="bg-white text-black hover:bg-gray-200 font-bold select-none"
+              className="bg-white hover:bg-zinc-500 bg-opacity-40 backdrop-blur-lg text-shadow-lg font-bold select-none"
             >
               previous
             </Button>
@@ -72,14 +72,14 @@ export default function Trip({
           {currentDestinationIndex < trip.length - 1 ? (
             <Button
               onClick={handleNext}
-              className="bg-white text-black hover:bg-gray-200 font-bold select-none"
+              className="bg-white hover:bg-zinc-500 bg-opacity-40 backdrop-blur-lg text-shadow-lg font-bold select-none"
             >
               next destination
             </Button>
           ) : (
             <Button
               onClick={resetTrip}
-              className="bg-white text-black hover:bg-gray-200 font-bold select-none"
+              className="bg-white hover:bg-zinc-500 bg-opacity-40 backdrop-blur-lg text-shadow-lg font-bold select-none"
             >
               new trip
             </Button>

@@ -4,12 +4,15 @@ import Header from "@/components/header";
 import Map from "@/components/map/map";
 import Menu from "@/components/menu";
 import Trip from "@/components/trip";
+import Loading from "@/components/loading";
 
 export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [trip, setTrip] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const [currentDestinationIndex, setCurrentDestinationIndex] = useState(0);
+
+  console.log(trip);
 
   const onPlanTrip = async ({ destination, activities }: any) => {
     setLoading(true);
@@ -40,7 +43,9 @@ export default function Home() {
         currentDestinationIndex={currentDestinationIndex}
       />
       <Header menuOpen={menuOpen} />
-      {!trip ? (
+      {loading ? (
+        <Loading />
+      ) : !trip ? (
         <Menu
           menuOpen={menuOpen}
           setMenuOpen={setMenuOpen}

@@ -16,16 +16,61 @@ const LOADING_VIEW_PROPS = {
 };
 
 const coordinates = [
-  { lat: 40.748817, lng: -73.985428, name: "Empire State Building" },
-  { lat: 40.689247, lng: -74.044502, name: "Statue of Liberty" },
-  { lat: 40.706086, lng: -73.996864, name: "Brooklyn Bridge" },
   { lat: 40.758896, lng: -73.98513, name: "Times Square" },
-  { lat: 40.761432, lng: -73.977621, name: "Central Park" },
-  { lat: 37.774929, lng: -122.419416, name: "San Francisco City Hall" },
-  { lat: 37.807999, lng: -122.417743, name: "Fisherman's Wharf" },
-  { lat: 37.819929, lng: -122.478255, name: "Golden Gate Bridge" },
-  { lat: 37.802139, lng: -122.448344, name: "Palace of Fine Arts" },
-  { lat: 37.769421, lng: -122.486214, name: "Golden Gate Park" },
+  {
+    lat: 37.819929,
+    lng: -122.478255,
+    name: "Golden Gate Bridge",
+    elevation: 0,
+  },
+  {
+    lat: 38.5753936,
+    lng: -107.7415961,
+    name: "Black Canyon Campgrounds",
+    elevation: 1709.9677734375,
+  },
+  {
+    lat: -25.3437797,
+    lng: 131.0346514,
+    name: "Uluru-Kata Tjuta National Park",
+    elevation: 851.6676025390625,
+  },
+  {
+    name: "Mount Fuji",
+    lat: 35.3606255,
+    lng: 138.7273634,
+    elevation: 3729.94970703125,
+  },
+  {
+    name: "Iceland's South Coast",
+    lat: 64.2661426,
+    lng: -18.8158138,
+    elevation: 1200,
+  },
+  {
+    name: "Annapurna Base Camp Trek",
+    lat: 28.53041409999999,
+    lng: 83.87806909999999,
+    elevation: 4120.42333984375,
+  },
+  {
+    name: "Mount Rainier National Park",
+    lat: 46.8671484,
+    lng: -121.6998559,
+    elevation: 2213.164794921875,
+  },
+  {
+    name: "London",
+    lat: 51.5072178,
+    lng: -0.1275862,
+    elevation: 7.165058612823486,
+  },
+  {
+    name: "Everest Base Camp",
+    lat: 28.0022779,
+    lng: 86.8528655,
+    elevation: 5294.03955078125,
+  },
 ];
 
 export default function Map({
@@ -219,7 +264,7 @@ export default function Map({
                   center: {
                     lat: coord.lat,
                     lng: coord.lng,
-                    altitude: 0,
+                    altitude: coordinates[index].elevation || 0,
                   },
                   tilt: 55,
                   range: 1500,
@@ -232,7 +277,11 @@ export default function Map({
               // Rotate around the current point
               await flyCameraAroundAsync({
                 camera: {
-                  center: { lat: coord.lat, lng: coord.lng, altitude: 0 },
+                  center: {
+                    lat: coord.lat,
+                    lng: coord.lng,
+                    altitude: coordinates[index].elevation || 0,
+                  },
                   tilt: 55,
                   range: 1500,
                   heading: 0,
