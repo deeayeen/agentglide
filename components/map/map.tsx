@@ -1,3 +1,4 @@
+// map.tsx
 import { useCallback, useState, useRef, useEffect, useMemo } from "react";
 import { APIProvider } from "@vis.gl/react-google-maps";
 import { Map3D, Map3DCameraProps } from "./map-3d";
@@ -7,8 +8,8 @@ const API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "";
 const LOADING_ALTITUDE = 20000000;
 
 const LOADING_VIEW_PROPS = {
-  center: { lat: 0, lng: 0, altitude: LOADING_ALTITUDE }, // Very high altitude to view the Earth
-  range: LOADING_ALTITUDE, // Large range to make the Earth visible
+  center: { lat: 0, lng: 0, altitude: LOADING_ALTITUDE },
+  range: LOADING_ALTITUDE,
   tilt: 0,
   heading: 0,
   roll: 0,
@@ -30,9 +31,11 @@ const coordinates = [
 export default function Map({
   loading,
   trip,
+  currentDestinationIndex,
 }: {
   loading: boolean;
   trip: any;
+  currentDestinationIndex: number;
 }) {
   const nonAlphaVersionLoaded = Boolean(
     globalThis &&
@@ -42,7 +45,7 @@ export default function Map({
 
   if (nonAlphaVersionLoaded) {
     location.reload();
-    return null; // Return null to prevent rendering issues
+    return null; // Prevent rendering issues
   }
 
   const [mapLoaded, setMapLoaded] = useState(false);
@@ -59,19 +62,17 @@ export default function Map({
   );
   const startingCoordinate = coordinates[randomStartIndex];
 
-  const INITIAL_VIEW_PROPS = loading
-    ? LOADING_VIEW_PROPS
-    : {
-        center: {
-          lat: startingCoordinate.lat,
-          lng: startingCoordinate.lng,
-          altitude: 0,
-        },
-        range: 1500,
-        tilt: 55,
-        heading: 0,
-        roll: 0,
-      };
+  const INITIAL_VIEW_PROPS = {
+    center: {
+      lat: startingCoordinate.lat,
+      lng: startingCoordinate.lng,
+      altitude: 0,
+    },
+    range: 1500,
+    tilt: 55,
+    heading: 0,
+    roll: 0,
+  };
 
   const [viewProps, setViewProps] = useState(INITIAL_VIEW_PROPS);
 
@@ -79,30 +80,13 @@ export default function Map({
     if (mapLoaded && map3dRef.current && globalThis.google) {
       const map3dElement = map3dRef.current;
       let isCancelled = false;
+      let currentMarker: google.maps.maps3d.Marker3DElement | null = null;
 
-      (async () => {
+      const runAnimation = async () => {
         try {
-          //@ts-ignore
+          // @ts-ignore
           const { Marker3DElement } =
             await globalThis.google.maps.importLibrary("maps3d");
-
-          //@ts-ignore
-          let currentMarker: google.maps.Marker3DElement | null = null;
-
-          const flyCameraAroundAsync = (options: any) => {
-            return new Promise<void>((resolve) => {
-              const onAnimationEnd = () => {
-                map3dElement.removeEventListener(
-                  "gmp-animationend",
-                  onAnimationEnd
-                );
-                resolve();
-              };
-              map3dElement.addEventListener("gmp-animationend", onAnimationEnd);
-              //@ts-ignore
-              map3dElement.flyCameraAround(options);
-            });
-          };
 
           const flyCameraToAsync = (options: any) => {
             return new Promise<void>((resolve) => {
@@ -114,151 +98,148 @@ export default function Map({
                 resolve();
               };
               map3dElement.addEventListener("gmp-animationend", onAnimationEnd);
-              //@ts-ignore
+              // @ts-ignore
               map3dElement.flyCameraTo(options);
             });
           };
 
-          // Extract trip coordinates if trip is provided
-          const tripCoordinates = trip
-            ? trip.map((dest: any) => ({
-                lat: dest.destinationCoordinatesLatitude,
-                lng: dest.destinationCoordinatesLongitude,
-                name: dest.destinationName,
-              }))
-            : [];
-
-          const isUsingTrip = trip && tripCoordinates.length > 0;
-          const coordinatesToUse = isUsingTrip ? tripCoordinates : coordinates;
-          const startIndex = isUsingTrip ? 0 : randomStartIndex;
-
-          const animateLoop = async (startIndex: number) => {
-            let index = startIndex % coordinatesToUse.length;
-            let hasFlownToFirstTripDestination = false;
-
-            while (!isCancelled) {
-              if (loading) {
-                // Fly to the starting location before rotating
-                await flyCameraToAsync({
-                  endCamera: {
-                    center: { lat: 0, lng: 0, altitude: LOADING_ALTITUDE },
-                    tilt: 0,
-                    range: LOADING_ALTITUDE,
-                    heading: 0,
-                    roll: 0,
-                  },
-                  durationMillis: 2000, // Adjust this to control the speed of the flight
-                });
-
-                // Rotate the view around the Earth while loading
-                await flyCameraAroundAsync({
-                  camera: {
-                    center: { lat: 0, lng: 0, altitude: LOADING_ALTITUDE },
-                    tilt: 0,
-                    range: LOADING_ALTITUDE,
-                    heading: 0,
-                    roll: 0,
-                  },
-                  durationMillis: 60000, // Longer duration for a smooth rotation
-                  rounds: 2,
-                });
-              } else {
-                if (!hasFlownToFirstTripDestination && isUsingTrip) {
-                  // Fly from loading view to the first trip destination
-                  const firstCoord = coordinatesToUse[0];
-
-                  await flyCameraToAsync({
-                    endCamera: {
-                      center: {
-                        lat: firstCoord.lat,
-                        lng: firstCoord.lng,
-                        altitude: 0,
-                      },
-                      tilt: 55,
-                      range: 1500,
-                      heading: 0,
-                      roll: 0,
-                    },
-                    durationMillis: 5000, // Adjust as needed
-                  });
-
-                  hasFlownToFirstTripDestination = true;
-                }
-
-                const coord = coordinatesToUse[index];
-
-                if (isUsingTrip) {
-                  // Remove previous marker if any
-                  if (currentMarker) {
-                    map3dElement.removeChild(currentMarker);
-                    currentMarker = null;
-                  }
-
-                  // Create new marker with label
-                  const marker = new Marker3DElement({
-                    position: { lat: coord.lat, lng: coord.lng },
-                    label: coord.name,
-                  });
-
-                  map3dElement.appendChild(marker);
-                  currentMarker = marker;
-                }
-
-                // Rotate around the current point
-                await flyCameraAroundAsync({
-                  camera: {
-                    center: { lat: coord.lat, lng: coord.lng, altitude: 0 },
-                    tilt: 55,
-                    range: 1500,
-                    heading: 0,
-                    roll: 0,
-                  },
-                  durationMillis: 10000, // 10 seconds
-                  rounds: 0.5,
-                });
-
-                if (isCancelled) break;
-
-                if (isUsingTrip && currentMarker) {
-                  // Remove marker at current coordinate
-                  map3dElement.removeChild(currentMarker);
-                  currentMarker = null;
-                }
-
-                // Move to the next index
-                index = (index + 1) % coordinatesToUse.length;
-                const nextCoord = coordinatesToUse[index];
-
-                // Fly to the next point with doubled duration if using trip
-                await flyCameraToAsync({
-                  endCamera: {
-                    center: {
-                      lat: nextCoord.lat,
-                      lng: nextCoord.lng,
-                      altitude: 0,
-                    },
-                    tilt: 55,
-                    range: 1500,
-                    heading: 0,
-                    roll: 0,
-                  },
-                  durationMillis: isUsingTrip ? 7000 : 5000, // Double duration if using trip
-                });
-              }
-            }
+          const flyCameraAroundAsync = (options: any) => {
+            return new Promise<void>((resolve) => {
+              const onAnimationEnd = () => {
+                map3dElement.removeEventListener(
+                  "gmp-animationend",
+                  onAnimationEnd
+                );
+                resolve();
+              };
+              map3dElement.addEventListener("gmp-animationend", onAnimationEnd);
+              // @ts-ignore
+              map3dElement.flyCameraAround(options);
+            });
           };
 
-          animateLoop(startIndex);
+          if (loading) {
+            // Fly to loading view
+            await flyCameraToAsync({
+              endCamera: LOADING_VIEW_PROPS,
+              durationMillis: 2000,
+            });
+
+            // Rotate around the Earth while loading
+            await flyCameraAroundAsync({
+              camera: LOADING_VIEW_PROPS,
+              durationMillis: 60000,
+              rounds: 2,
+            });
+          } else if (trip && trip.length > 0) {
+            // Trip mode
+            const destination = trip[currentDestinationIndex];
+
+            // Remove previous marker if any
+            if (currentMarker) {
+              map3dElement.removeChild(currentMarker);
+              currentMarker = null;
+            }
+
+            // Create new marker with label
+            currentMarker = new Marker3DElement({
+              position: {
+                lat: destination.destinationCoordinatesLatitude,
+                lng: destination.destinationCoordinatesLongitude,
+              },
+              label: destination.destinationName,
+            });
+            map3dElement.appendChild(currentMarker);
+
+            // Fly to the current trip destination
+            await flyCameraToAsync({
+              endCamera: {
+                center: {
+                  lat: destination.destinationCoordinatesLatitude,
+                  lng: destination.destinationCoordinatesLongitude,
+                  altitude: 0,
+                },
+                tilt: 55,
+                range: 1500,
+                heading: 0,
+                roll: 0,
+              },
+              durationMillis: 2000,
+            });
+
+            // Rotate around the current destination point
+            await flyCameraAroundAsync({
+              camera: {
+                center: {
+                  lat: destination.destinationCoordinatesLatitude,
+                  lng: destination.destinationCoordinatesLongitude,
+                  altitude: 0,
+                },
+                tilt: 55,
+                range: 1500,
+                heading: 0,
+                roll: 0,
+              },
+              durationMillis: 80000,
+              rounds: 4,
+            });
+          } else {
+            // Default mode: loop through coordinates infinitely
+            let index = randomStartIndex;
+            while (!isCancelled) {
+              const coord = coordinates[index];
+
+              // Fly to the current coordinate
+              await flyCameraToAsync({
+                endCamera: {
+                  center: {
+                    lat: coord.lat,
+                    lng: coord.lng,
+                    altitude: 0,
+                  },
+                  tilt: 55,
+                  range: 1500,
+                  heading: 0,
+                  roll: 0,
+                },
+                durationMillis: 2000,
+              });
+
+              // Rotate around the current point
+              await flyCameraAroundAsync({
+                camera: {
+                  center: { lat: coord.lat, lng: coord.lng, altitude: 0 },
+                  tilt: 55,
+                  range: 1500,
+                  heading: 0,
+                  roll: 0,
+                },
+                durationMillis: 10000,
+                rounds: 0.5,
+              });
+
+              if (isCancelled || (trip && trip.length > 0)) break; // Break if trip starts
+
+              // Move to the next index
+              index = (index + 1) % coordinates.length;
+            }
+          }
         } catch (error) {
           console.error("Error during map animation:", error);
         }
+      };
 
-        return () => {
-          isCancelled = true;
-        };
-      })();
+      runAnimation();
+
+      return () => {
+        isCancelled = true;
+        if (currentMarker) {
+          map3dElement.removeChild(currentMarker);
+          currentMarker = null;
+        }
+      };
     }
-  }, [mapLoaded, loading, trip, randomStartIndex, map3dRef.current]);
+  }, [mapLoaded, loading, trip, currentDestinationIndex, map3dRef.current]);
 
   return (
     <APIProvider apiKey={API_KEY} version={"alpha"}>
