@@ -4,8 +4,71 @@ import { CircleArrowRightIcon, XIcon } from "lucide-react";
 import clsx from "clsx";
 import { Input } from "@/components/ui/input";
 
+const activities = [
+  {
+    name: "Sightseeing & Landmarks",
+    emoji: "🏰",
+    description:
+      "Explore famous landmarks, historical sites, and architectural marvels.",
+  },
+  {
+    name: "Cultural Experiences",
+    emoji: "🎭",
+    description:
+      "Engage with local traditions, festivals, and cultural performances.",
+  },
+  {
+    name: "Art & Museums",
+    emoji: "🖼️",
+    description:
+      "Explore art galleries, museums, and exhibitions showcasing local and international art.",
+  },
+  {
+    name: "Outdoor Adventures",
+    emoji: "🚵‍♂️",
+    description:
+      "Enjoy activities like hiking, biking, water sports, and other adrenaline-pumping adventures.",
+  },
+  {
+    name: "Food & Culinary Tours",
+    emoji: "🍽️",
+    description:
+      "Discover local cuisine through food tours, cooking classes, and wine tastings.",
+  },
+  {
+    name: "Shopping & Markets",
+    emoji: "🛍️",
+    description:
+      "Visit popular shopping districts, local markets, and artisan shops.",
+  },
+  {
+    name: "Relaxation & Wellness",
+    emoji: "🧘‍♀️",
+    description:
+      "Unwind at spas, hot springs, yoga retreats, or wellness centers.",
+  },
+  {
+    name: "Nightlife & Entertainment",
+    emoji: "🎶",
+    description:
+      "Experience the local nightlife, including bars, clubs, live music, and theaters.",
+  },
+];
+
 export default function Menu() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [selectedActivities, setSelectedActivities] = useState<any>([]);
+  const [destination, setDestination] = useState("");
+
+  const onActivityClick = (activity: any) => {
+    if (selectedActivities.includes(activity)) {
+      setSelectedActivities(
+        selectedActivities.filter((a: any) => a !== activity)
+      );
+    } else {
+      setSelectedActivities([...selectedActivities, activity]);
+    }
+  };
 
   const handleButtonClick = () => {
     setMenuOpen(true);
@@ -54,11 +117,35 @@ export default function Menu() {
               <div className="font-bold mb-2">
                 where would you like to travel?
               </div>
-              <Input className="w-full font-bold" />
+              <Input
+                className="w-full font-bold"
+                value={destination}
+                onChange={(e) => setDestination(e.target.value)}
+              />
               <div className="font-bold mt-8 mb-2">
                 what activities are you interested in?
               </div>
-              <Input className="w-full font-bold" />
+              <div className="flex flex-wrap">
+                {activities.map((activity) => (
+                  <Button
+                    key={activity.name}
+                    className={clsx(
+                      "mr-2 mb-2 text-white hover:bg-gray-200 font-bold text-lg select-none transition-opacity duration-500 ease-in-out",
+                      {
+                        "bg-white": selectedActivities.includes(activity),
+                        "text-black": selectedActivities.includes(activity),
+                      }
+                    )}
+                    variant="outline"
+                    onClick={() => onActivityClick(activity)}
+                  >
+                    <div className="font-bold text-sm">
+                      {activity.emoji} {activity.name.toLowerCase()}
+                    </div>
+                    {/*<div className="text-sm">{activity.description}</div>*/}
+                  </Button>
+                ))}
+              </div>
             </div>
           </div>
         </div>
@@ -73,7 +160,6 @@ export default function Menu() {
             <CircleArrowRightIcon className="w-5 h-5 ml-2" />
           </Button>
         )}
-        {/* Close Button */}
         {menuOpen && (
           <Button
             className={clsx(
