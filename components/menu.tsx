@@ -2,74 +2,18 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { CircleArrowRightIcon, XIcon } from "lucide-react";
 import clsx from "clsx";
-import { Input } from "@/components/ui/input";
+import Form from "./form";
+import Image from "next/image";
 
-const activities = [
-  {
-    name: "Sightseeing & Landmarks",
-    emoji: "🏰",
-    description:
-      "Explore famous landmarks, historical sites, and architectural marvels.",
-  },
-  {
-    name: "Cultural Experiences",
-    emoji: "🎭",
-    description:
-      "Engage with local traditions, festivals, and cultural performances.",
-  },
-  {
-    name: "Art & Museums",
-    emoji: "🖼️",
-    description:
-      "Explore art galleries, museums, and exhibitions showcasing local and international art.",
-  },
-  {
-    name: "Outdoor Adventures",
-    emoji: "🚵‍♂️",
-    description:
-      "Enjoy activities like hiking, biking, water sports, and other adrenaline-pumping adventures.",
-  },
-  {
-    name: "Food & Culinary Tours",
-    emoji: "🍽️",
-    description:
-      "Discover local cuisine through food tours, cooking classes, and wine tastings.",
-  },
-  {
-    name: "Shopping & Markets",
-    emoji: "🛍️",
-    description:
-      "Visit popular shopping districts, local markets, and artisan shops.",
-  },
-  {
-    name: "Relaxation & Wellness",
-    emoji: "🧘‍♀️",
-    description:
-      "Unwind at spas, hot springs, yoga retreats, or wellness centers.",
-  },
-  {
-    name: "Nightlife & Entertainment",
-    emoji: "🎶",
-    description:
-      "Experience the local nightlife, including bars, clubs, live music, and theaters.",
-  },
-];
-
-export default function Menu() {
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [selectedActivities, setSelectedActivities] = useState<any>([]);
-  const [destination, setDestination] = useState("");
-
-  const onActivityClick = (activity: any) => {
-    if (selectedActivities.includes(activity)) {
-      setSelectedActivities(
-        selectedActivities.filter((a: any) => a !== activity)
-      );
-    } else {
-      setSelectedActivities([...selectedActivities, activity]);
-    }
-  };
-
+export default function Menu({
+  menuOpen,
+  setMenuOpen,
+  onPlanTrip,
+}: {
+  menuOpen: boolean;
+  setMenuOpen: (menuOpen: boolean) => void;
+  onPlanTrip: any;
+}) {
   const handleButtonClick = () => {
     setMenuOpen(true);
   };
@@ -112,42 +56,7 @@ export default function Menu() {
             }
           )}
         >
-          <div className="w-full h-full flex items-center justify-center">
-            <div className="w-full">
-              <div className="font-bold mb-2">
-                where would you like to travel?
-              </div>
-              <Input
-                className="w-full font-bold"
-                value={destination}
-                onChange={(e) => setDestination(e.target.value)}
-              />
-              <div className="font-bold mt-8 mb-2">
-                what activities are you interested in?
-              </div>
-              <div className="flex flex-wrap">
-                {activities.map((activity) => (
-                  <Button
-                    key={activity.name}
-                    className={clsx(
-                      "mr-2 mb-2 text-white hover:bg-gray-200 font-bold text-lg select-none transition-opacity duration-500 ease-in-out",
-                      {
-                        "bg-white": selectedActivities.includes(activity),
-                        "text-black": selectedActivities.includes(activity),
-                      }
-                    )}
-                    variant="outline"
-                    onClick={() => onActivityClick(activity)}
-                  >
-                    <div className="font-bold text-sm">
-                      {activity.emoji} {activity.name.toLowerCase()}
-                    </div>
-                    {/*<div className="text-sm">{activity.description}</div>*/}
-                  </Button>
-                ))}
-              </div>
-            </div>
-          </div>
+          <Form onPlanTrip={onPlanTrip} menuOpen={menuOpen} />
         </div>
         {!menuOpen && (
           <Button
@@ -170,6 +79,27 @@ export default function Menu() {
             <XIcon className="w-5 h-5 rounded-full" />
           </Button>
         )}
+      </div>
+
+      {/* Penguin Image with Fade-Up Animation */}
+      <div
+        className={clsx(
+          "absolute top-[-46px] left-[50%] transform -translate-x-1/2 transition-all",
+          {
+            "opacity-0 translate-y-5 duration-0": !menuOpen, // Immediate hide when menu closes
+            "opacity-100 translate-y-0 duration-200 delay-400": menuOpen, // Fade up with delay when menu opens
+          }
+        )}
+      >
+        <div className="bg-white bg-opacity-30 backdrop-blur-md rounded-full p-4 flex items-center justify-center">
+          <Image
+            src="/agentglide.png"
+            alt="agentglide"
+            width={60}
+            height={60}
+            className="rounded-full"
+          />
+        </div>
       </div>
     </div>
   );
