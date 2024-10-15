@@ -12,8 +12,6 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [currentDestinationIndex, setCurrentDestinationIndex] = useState(0);
 
-  console.log(trip);
-
   const onPlanTrip = async ({ destination, activities }: any) => {
     setLoading(true);
     setMenuOpen(false);
