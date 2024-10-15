@@ -3,6 +3,7 @@ import { CircleArrowRightIcon, XIcon } from "lucide-react";
 import clsx from "clsx";
 import Form from "./form";
 import Image from "next/image";
+import { isMobile } from "react-device-detect";
 
 export default function Menu({
   menuOpen,
@@ -33,7 +34,7 @@ export default function Menu({
     >
       <div
         className={clsx(
-          "bg-white bg-opacity-20 backdrop-blur-lg px-6 py-4 relative w-[35rem]",
+          "bg-white bg-opacity-20 backdrop-blur-lg px-6 py-4 relative w-[95vw] sm:w-[35rem]",
           "transition-all duration-500 ease-in-out overflow-hidden",
           {
             "rounded-t-lg": !menuOpen,
@@ -42,7 +43,7 @@ export default function Menu({
         )}
       >
         {!menuOpen && (
-          <div className="text-xl sm:text-3xl font-black select-none text-center text-shadow-lg">
+          <div className="text-lg sm:text-3xl font-black select-none text-center text-shadow-lg">
             photo-realistic 3D AI travel agent
           </div>
         )}
@@ -50,7 +51,7 @@ export default function Menu({
           className={clsx(
             "w-full transition-all duration-500 ease-in-out overflow-hidden",
             {
-              "h-[25rem] opacity-100": menuOpen,
+              "h-[75vh] sm:h-[25rem] opacity-100": menuOpen,
               "h-0 opacity-0": !menuOpen,
             }
           )}
@@ -60,7 +61,7 @@ export default function Menu({
         {!menuOpen && (
           <Button
             className={clsx(
-              "mt-3 w-full bg-white text-black hover:bg-gray-200 font-bold text-lg select-none transition-opacity duration-500 ease-in-out"
+              "mt-3 w-full bg-white text-black hover:bg-gray-200 font-bold text-base sm:text-lg select-none transition-opacity duration-500 ease-in-out"
             )}
             onClick={handleButtonClick}
           >
@@ -83,19 +84,19 @@ export default function Menu({
       {/* Penguin Image with Fade-Up Animation */}
       <div
         className={clsx(
-          "absolute top-[-46px] left-[50%] transform -translate-x-1/2 transition-all",
+          "absolute top-[-32px] sm:top-[-46px] left-[50%] transform -translate-x-1/2 transition-all",
           {
             "opacity-0 translate-y-5 duration-0": !menuOpen, // Immediate hide when menu closes
             "opacity-100 translate-y-0 duration-200 delay-400": menuOpen, // Fade up with delay when menu opens
           }
         )}
       >
-        <div className="bg-white bg-opacity-30 backdrop-blur-md rounded-full p-4 flex items-center justify-center">
+        <div className="bg-white bg-opacity-30 backdrop-blur-md rounded-full p-3 sm:p-4 flex items-center justify-center">
           <Image
             src="/agentglide.png"
             alt="agentglide"
-            width={60}
-            height={60}
+            width={isMobile ? 40 : 60}
+            height={isMobile ? 40 : 60}
             className="rounded-full"
           />
         </div>

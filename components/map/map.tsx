@@ -16,6 +16,18 @@ const LOADING_VIEW_PROPS = {
 };
 
 const coordinates = [
+  {
+    name: "Mount Vesuvius and Pompeii",
+    lat: 40.82238299999999,
+    lng: 14.4289058,
+    elevation: 1259.667358398438,
+  },
+  {
+    name: "Dolomite Mountains",
+    lat: 46.4102117,
+    lng: 11.8440351,
+    elevation: 2953.22607421875,
+  },
   { lat: 40.758896, lng: -73.98513, name: "Times Square" },
   {
     lat: 37.819929,

@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import clsx from "clsx";
 import { CircleArrowRightIcon } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { isMobile } from "react-device-detect";
 
 const activities = [
   {
@@ -66,7 +67,7 @@ export default function Form({
   useEffect(() => {
     setDestination("");
     setSelectedActivities([]);
-    if (menuOpen && inputRef.current) {
+    if (menuOpen && inputRef.current && !isMobile) {
       inputRef.current.focus(); // Focus on the input when the menu is opened
     }
   }, [menuOpen]);
@@ -79,7 +80,7 @@ export default function Form({
         </div>
         <Input
           ref={inputRef}
-          className="w-full font-bold text-shadow-lg"
+          className="w-full font-bold text-shadow-lg text-base"
           value={destination}
           onChange={(e) => setDestination(e.target.value)}
         />
@@ -95,12 +96,17 @@ export default function Form({
                 {
                   "bg-white": selectedActivities.includes(activity),
                   "text-black": selectedActivities.includes(activity),
+                  "border-black": selectedActivities.includes(activity),
                 }
               )}
               variant="outline"
               onClick={() => onActivityClick(activity)}
             >
-              <div className="font-bold text-sm text-shadow-lg">
+              <div
+                className={clsx("font-bold text-sm text-shadow-lg", {
+                  "text-shadow-none": selectedActivities.includes(activity),
+                })}
+              >
                 {activity.emoji} {activity.name.toLowerCase()}
               </div>
             </Button>

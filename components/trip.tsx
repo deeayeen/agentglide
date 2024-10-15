@@ -1,6 +1,7 @@
 // trip.tsx
 import React from "react";
 import { Button } from "@/components/ui/button";
+import { isMobile } from "react-device-detect";
 
 export default function Trip({
   trip,
@@ -40,25 +41,46 @@ export default function Trip({
   return (
     <div className="trip-info fixed bottom-0 left-0 w-full flex justify-center">
       <div className="bg-white bg-opacity-30 backdrop-blur-lg p-4 rounded-t-lg">
-        <div className="flex">
-          <div className="max-w-md">
-            <div className="text-3xl font-black text-shadow-lg">
-              {destination.destinationName}
+        {!isMobile ? (
+          <div className="flex">
+            <div className="max-w-md">
+              <div className="text-3xl font-black text-shadow-lg">
+                {destination.destinationName}
+              </div>
+              <div className="mt-2 text-sm font-bold text-shadow-lg">
+                {destination.destinationDescription}
+              </div>
+            </div>
+            {photoUrl && (
+              <img
+                src={photoUrl}
+                alt={destination.destinationName}
+                className="ml-8 h-40 rounded-lg"
+              />
+            )}
+          </div>
+        ) : (
+          <div>
+            <div className="flex justify-between">
+              <div className="text-xl font-black text-shadow-lg">
+                {destination.destinationName}
+              </div>
+              {photoUrl && (
+                <img
+                  src={photoUrl}
+                  alt={destination.destinationName}
+                  className="ml-8 h-16 rounded-lg"
+                />
+              )}
             </div>
             <div className="mt-2 text-sm font-bold text-shadow-lg">
               {destination.destinationDescription}
             </div>
           </div>
-          {photoUrl && (
-            <img
-              src={photoUrl}
-              alt={destination.destinationName}
-              className="ml-8 h-40 rounded-lg"
-            />
-          )}
-        </div>
+        )}
+
         {/* Add more fields as needed */}
-        <div className="absolute flex justify-between top-[-50px] left-0 w-full">
+        <div className="absolute flex justify-between top-[-50px] left-0 w-full px-2 sm:p-0">
           {currentDestinationIndex !== 0 ? (
             <Button
               onClick={handlePrevious}
