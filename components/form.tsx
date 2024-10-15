@@ -68,7 +68,7 @@ export default function Form({
     setDestination("");
     setSelectedActivities([]);
     if (menuOpen && inputRef.current && !isMobile) {
-      inputRef.current.focus(); // Focus on the input when the menu is opened
+      inputRef.current.focus();
     }
   }, [menuOpen]);
 

@@ -1,4 +1,3 @@
-// map.tsx
 import { useCallback, useState, useRef, useEffect, useMemo } from "react";
 import { APIProvider } from "@vis.gl/react-google-maps";
 import { Map3D, Map3DCameraProps } from "./map-3d";
@@ -102,7 +101,7 @@ export default function Map({
 
   if (nonAlphaVersionLoaded) {
     location.reload();
-    return null; // Prevent rendering issues
+    return null;
   }
 
   const [mapLoaded, setMapLoaded] = useState(false);

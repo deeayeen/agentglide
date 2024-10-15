@@ -81,13 +81,12 @@ export default function Menu({
         )}
       </div>
 
-      {/* Penguin Image with Fade-Up Animation */}
       <div
         className={clsx(
           "absolute top-[-32px] sm:top-[-46px] left-[50%] transform -translate-x-1/2 transition-all",
           {
-            "opacity-0 translate-y-5 duration-0": !menuOpen, // Immediate hide when menu closes
-            "opacity-100 translate-y-0 duration-200 delay-400": menuOpen, // Fade up with delay when menu opens
+            "opacity-0 translate-y-5 duration-0": !menuOpen,
+            "opacity-100 translate-y-0 duration-200 delay-400": menuOpen,
           }
         )}
       >

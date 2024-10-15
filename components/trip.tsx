@@ -1,4 +1,3 @@
-// trip.tsx
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { isMobile } from "react-device-detect";
@@ -32,7 +31,6 @@ export default function Trip({
     }
   };
 
-  // Get photo URL if available
   const photoUrl =
     destination.photos && destination.photos.length > 0
       ? getPhotoUrl(destination.photos[0].photo_reference)
@@ -79,7 +77,6 @@ export default function Trip({
           </div>
         )}
 
-        {/* Add more fields as needed */}
         <div className="absolute flex justify-between top-[-50px] left-0 w-full px-2 sm:p-0">
           {currentDestinationIndex !== 0 ? (
             <Button
@@ -112,7 +109,6 @@ export default function Trip({
   );
 }
 
-// Function to get photo URL
 function getPhotoUrl(photoReference: string, maxWidth: number = 400) {
   const GOOGLE_MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "";
   return `https://maps.googleapis.com/maps/api/place/photo?maxwidth=${maxWidth}&photoreference=${photoReference}&key=${GOOGLE_MAPS_API_KEY}`;
