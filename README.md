@@ -1,6 +1,7 @@
 # agentglide.ai
 
 > View agentglide live at [agentglide.ai](https://agentglide.ai)
+> Desktop & Mobile responsive
 
 ### Google’s new photorealistic 3D map tiles offer brand new experiences for maps on the web
 
