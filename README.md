@@ -32,7 +32,7 @@ An AI travel agent that suggests destinations based on your interests, then give
 
 - Once we have a list of destinations, we want to query two relevant API’s for each item in the array. We will first query the Google Places API to get the exact coordinates, description, and images of the site, then we will query the Google Elevation API to know what altitude to offset the camera for each location
 
-- That’s it! We now have everything we need to present a full fly-around tour of the recommended destinations
+- That’s it! We now have everything we need to present a full fly-around tour of the recommended destinations 🎉
 
 ## Watch the youtube video here:
 
