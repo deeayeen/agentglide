@@ -18,21 +18,17 @@ An AI travel agent that suggests destinations based on your interests, then give
 - Select your interests
 - Receive a personalized virtual tour of beautiful sites to visit
 
-
-### So how do we go about building this?   
+### So how do we go about building this?
 
 - When the user first enters the site, let’s entice them with a fly-around of ~10 locations that look breathtaking in 3D
 
-
 - Next, let’s prompt the user to tell us where they’d like to travel. They can input anything, anywhere, in the language of their choice, Google Gemini will be able to parse it
-
 
 - Let’s then provide Google Gemini with the inputted destination and selected interests, then prompt it to return a list of personalized recommendations. We want the response to be a structured JSON, so let’s attach a schema to the prompt request
 
-
 - Once we have a list of destinations, we want to query two relevant API’s for each item in the array. We will first query the Google Places API to get the exact coordinates, description, and images of the site, then we will query the Google Elevation API to know what altitude to offset the camera for each location
 
-- That’s it! We now have everything we need to present a full fly-around tour of the recommended destinations 🎉
+- That’s it! We now have everything we need to present a full fly-around tour of the recommended destinations 🎉🎉
 
 ## Watch the youtube video here:
 
